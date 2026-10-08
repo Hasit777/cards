@@ -1,3 +1,9 @@
+/* SOOOOOOOOO this code is to do with card deck where we have to lock down the deck so that more than one thread cant interact with it at once, and we have encaspulated the cards so that they cannot be changed by the threads themselves
+we use draw() to take a card from the top and we use add() to add a card to the bottom of the deck but as add and draw are meant to be one atomic action we will need to lock 2 decks at once and then unlock 2 for the players action
+the size() getst he size of the deck isempty() checks if the deck is empty getContents() gets the an array of the deck lock denies access to external threads and unlock() unlocks it
+contentsLine() prints the deck as a readable string and writeOutputFile creates a file which holds relevant infomation*/
+
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
