@@ -49,9 +49,9 @@ public class CardGame {
         
 
       
-        Player player1 = new Player(1, player_cards1, deck1, deck2);//make the player 
-        Player player2 = new Player(2, player_cards2, deck2, deck3);
-        Player player3 = new Player(3, player_cards3, deck3, deck1);
+        Player player1 = new Player(1, player_cards1, deck1);//make the player 
+        Player player2 = new Player(2, player_cards2, deck2);
+        Player player3 = new Player(3, player_cards3, deck3);
 
         
         Thread thread1 = new Thread(player1);//make the threads
