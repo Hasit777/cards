@@ -6,41 +6,47 @@ public class CardGame {
     public static void main(String[] args) throws InterruptedException {
 
       
-        CardDeck deck1 = new CardDeck(1);//make the decks
+        List<Card> player_cards1 = new ArrayList<>();
+        List<Card> player_cards2 = new ArrayList<>();
+        List<Card> player_cards3 = new ArrayList<>();
+
+        CardDeck deck1 = new CardDeck(1);
         CardDeck deck2 = new CardDeck(2);
         CardDeck deck3 = new CardDeck(3);
 
+        PackReader reader = new PackReader("pack.txt");
+        reader.ReadPack();
+        ArrayList<String> pack = reader.getPackItems();
+        int cardIndex = 0;
+
+        for (int i = 0; i < 4; i++) {
+            player_cards1.add(new Card(Integer.parseInt(pack.get(cardIndex++))));
+            player_cards2.add(new Card(Integer.parseInt(pack.get(cardIndex++))));
+            player_cards3.add(new Card(Integer.parseInt(pack.get(cardIndex++))));
+        }
+
+        int deckIndex = 0;
+
+        for (int i = cardIndex; i < pack.size(); i++) {
         
-        deck1.add(new Card(1));//add test cards to the deck
-        deck1.add(new Card(2));
-
-        deck2.add(new Card(2));
-        deck2.add(new Card(3));
-
-        deck3.add(new Card(3));
-        deck3.add(new Card(1));
-
+            Card card = new Card(Integer.parseInt(pack.get(i)));
         
-        List<Card> player_cards1 = new ArrayList<>();//each players gets their starting cards
-        player_cards1.add(new Card(1));
-        player_cards1.add(new Card(2));
-        player_cards1.add(new Card(3));
-        player_cards1.add(new Card(4));
-
-        List<Card> player_cards2 = new ArrayList<>();
-        player_cards2.add(new Card(2));
-        player_cards2.add(new Card(3));
-        player_cards2.add(new Card(4));
-        player_cards2.add(new Card(5));
-
-        List<Card> player_cards3 = new ArrayList<>();
-        player_cards3.add(new Card(3));
-        player_cards3.add(new Card(4));
-        player_cards3.add(new Card(5));
-        player_cards3.add(new Card(6));
-
-    
+            if (deckIndex == 0) {
+                deck1.add(card);
+            } else if (deckIndex == 1) {
+                deck2.add(card);
+            } else {
+                deck3.add(card);
+            }
+        
+            deckIndex++;
+        
+            if (deckIndex == 3) {
+                deckIndex = 0;
+            }
+        }
         stateGame Gamestate = new stateGame();//shared gamestate
+        
 
       
         Player player1 = new Player(1, player_cards1, deck1, deck2);//make the player 
