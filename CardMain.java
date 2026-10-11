@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 
 public class CardMain {
 
@@ -95,10 +96,12 @@ public class CardMain {
         // create and start the player threads
         ArrayList<Thread> threads = new ArrayList<>();
 
+        CountDownLatch startSignal = new CountDownLatch(1);
+
         for (int i = 0; i < num_players; i++) {
-
+        
             int nextDeck = (i + 1) % num_players;
-
+        
             Player player = new Player(
                 i + 1,
                 player_cards.get(i),
@@ -106,11 +109,21 @@ public class CardMain {
                 decks.get(nextDeck),
                 Gamestate
             );
-
-            Thread thread = new Thread(player);
+        
+            Thread thread = new Thread(() -> {
+                try {
+                    startSignal.await();
+                    player.run();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        
             threads.add(thread);
             thread.start();
         }
+        
+        startSignal.countDown();
 
         // TEMPORARY: stop the threads for testing
         Thread.sleep(300);
