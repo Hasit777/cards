@@ -1,78 +1,128 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class CardGame {
+public class CardMain {
 
     public static void main(String[] args) throws InterruptedException {
 
-      
-        List<Card> player_cards1 = new ArrayList<>();
-        List<Card> player_cards2 = new ArrayList<>();
-        List<Card> player_cards3 = new ArrayList<>();
+        Scanner input = new Scanner(System.in);
 
-        CardDeck deck1 = new CardDeck(1);
-        CardDeck deck2 = new CardDeck(2);
-        CardDeck deck3 = new CardDeck(3);
+        // ask how many players
+        int num_players;
 
-        PackReader reader = new PackReader("pack.txt");
-        reader.ReadPack();
-        ArrayList<String> pack = reader.getPackItems();
-        int cardIndex = 0;
+        while (true) {
+            System.out.print("Enter number of players: ");
+            try {
+                num_players = Integer.parseInt(input.nextLine());
 
-        for (int i = 0; i < 4; i++) {
-            player_cards1.add(new Card(Integer.parseInt(pack.get(cardIndex++))));
-            player_cards2.add(new Card(Integer.parseInt(pack.get(cardIndex++))));
-            player_cards3.add(new Card(Integer.parseInt(pack.get(cardIndex++))));
-        }
+                if (num_players > 0) {
+                    break;
+                }
 
-        int deckIndex = 0;
-
-        for (int i = cardIndex; i < pack.size(); i++) {
-        
-            Card card = new Card(Integer.parseInt(pack.get(i)));
-        
-            if (deckIndex == 0) {
-                deck1.add(card);
-            } else if (deckIndex == 1) {
-                deck2.add(card);
-            } else {
-                deck3.add(card);
-            }
-        
-            deckIndex++;
-        
-            if (deckIndex == 3) {
-                deckIndex = 0;
+                System.out.println("Enter a positive number.");
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number.");
             }
         }
-        stateGame Gamestate = new stateGame();//shared gamestate
-        
 
-      
-        Player player1 = new Player(1, player_cards1, deck1);//make the player 
-        Player player2 = new Player(2, player_cards2, deck2);
-        Player player3 = new Player(3, player_cards3, deck3);
+        // read and validate the pack
+        ArrayList<String> packItems;
 
-        
-        Thread thread1 = new Thread(player1);//make the threads
-        Thread thread2 = new Thread(player2);
-        Thread thread3 = new Thread(player3);
+        while (true) {
+            System.out.print("Enter pack filename: ");
+            String fileName = input.nextLine();
 
-        
-        thread1.start();//start the threads 
-        thread2.start();
-        thread3.start();
+            PackReader reader = new PackReader(fileName);
+            reader.ReadPack();
+            packItems = reader.getPackItems();
 
-        
-        Thread.sleep(367);//to check the game loop briefly
+            boolean valid_pack = packItems.size() == (8 * num_players);
 
-        
+            for (String num : packItems) {
+                try {
+                    int value = Integer.parseInt(num.trim());
+
+                    if (value < 0) {
+                        valid_pack = false;
+                    }
+                } catch (NumberFormatException e) {
+                    valid_pack = false;
+                }
+            }
+
+            if (valid_pack) {
+                break;
+            }
+
+            System.out.println(
+                "Invalid pack. It must contain exactly "
+                + (8 * num_players)
+                + " non-negative integers, one per line."
+            );
+        }
+
+        // convert the pack strings into Cards
+        ArrayList<Card> pack = new ArrayList<>();
+
+        for (String item : packItems) {
+            pack.add(new Card(Integer.parseInt(item.trim())));
+        }
+
+        // create the decks and player card lists
+        ArrayList<CardDeck> decks = new ArrayList<>();
+        ArrayList<List<Card>> player_cards = new ArrayList<>();
+
+        for (int i = 0; i < num_players; i++) {
+            decks.add(new CardDeck(i + 1));
+            player_cards.add(new ArrayList<Card>());
+        }
+
+        // deal four cards to each player
+        for (int i = 0; i < 4 * num_players; i++) {
+            player_cards.get(i % num_players).add(pack.get(i));
+        }
+
+        // dustribute the remaining cards to the decks
+        for (int i = 4 * num_players; i < pack.size(); i++) {
+            int deckIndex = (i - 4 * num_players) % num_players;
+            decks.get(deckIndex).add(pack.get(i));
+        }
+
+        // ceate the shared game state
+        stateGame Gamestate = new stateGame();
+
+        // create and start the player threads
+        ArrayList<Thread> threads = new ArrayList<>();
+
+        for (int i = 0; i < num_players; i++) {
+
+            int nextDeck = (i + 1) % num_players;
+
+            Player player = new Player(
+                i + 1,
+                player_cards.get(i),
+                decks.get(i),
+                decks.get(nextDeck),
+                Gamestate
+            );
+
+            Thread thread = new Thread(player);
+            threads.add(thread);
+            thread.start();
+        }
+
+        // TEMPORARY: stop the threads for testing
+        Thread.sleep(300);
         Gamestate.endGame();
 
-        thread1.join();
-        thread2.join();
-        thread3.join();
+        // 9. Wait for every thread to finish
+        for (Thread thread : threads) {
+            thread.join();
+        }
 
-        System.out.println("all players have finished.");
+        System.out.println("All players have finished.");
+
+        input.close();
     }
 }
