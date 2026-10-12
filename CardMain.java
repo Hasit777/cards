@@ -125,15 +125,25 @@ public class CardMain {
         
         startSignal.countDown();
 
-        // TEMPORARY: stop the threads for testing
-        Thread.sleep(300);
-        Gamestate.endGame();
-
-        // 9. Wait for every thread to finish
+                // Give the game 30 seconds to finish
+        long starting_time = System.currentTimeMillis();
+        long maximum_limit = 30_000;
+        
+        while (!Gamestate.isFinished()
+                && System.currentTimeMillis() - starting_time < maximum_limit) {
+            Thread.sleep(100);
+        }
+        
+        // If the game has taken too long, stop it
+        if (!Gamestate.isFinished()) {
+            System.out.println("Time limit reached. Stopping game.");
+            Gamestate.endGame();
+        }
+        
+        // Wait for all player threads to finish
         for (Thread thread : threads) {
             thread.join();
         }
-
         System.out.println("All players have finished.");
 
         input.close();
