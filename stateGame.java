@@ -1,6 +1,6 @@
 public class stateGame {
 
-    private boolean finished = false;
+    private volatile boolean finished = false;
 
     public boolean isFinished() {
         return finished;
