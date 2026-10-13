@@ -80,11 +80,11 @@ public final class CardDeck {
     public String contentsLine() {
         lock.lock();
         try {
-            StringBuilder sb = new StringBuilder("deck").append(id).append(" contents:");
-            for (Card c : cards) {
-                sb.append(' ').append(c);
+            String results = "deck" + id + " contents:";
+            for (Card card : cards) {
+                result += " " + card.getValue();
             }
-            return sb.toString();
+            return results;
         } finally {
             lock.unlock();
         }
