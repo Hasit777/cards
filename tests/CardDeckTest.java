@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.rules.TemporaryFolder;
  
-/** JUnit 4.13.2 tests for CardDeck: FIFO, validation, output file, thread safety. */
 public class CardDeckTest {
  
     private CardDeck deck;
@@ -150,7 +149,7 @@ public class CardDeckTest {
         }
     }
     @Test(timeout = 10000)
-    public void lockedDeckBlocksOtherThreadsUntilUnlocked() throws Exception {
+    public void deckslocking() throws Exception {
         final boolean[] finished = {false};
         Thread other = new Thread() {
             @Override
