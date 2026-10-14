@@ -142,6 +142,43 @@ public class CardGameTest {
         boolean player1Won = playerOutput(1).contains("player 1 wins");
         boolean player2Won = playerOutput(2).contains("player 2 wins");
         assertNotEquals(player1Won, player2Won);
+    
+    @Test(timeout = 35000)
+    public void FullGameRun()
+            throws Exception {
+        int players = 4;
+        List<Integer> values = new ArrayList<Integer>();
+    
+        for (int value = 1; value <= players; value++) {
+            for (int i = 0; i < 8; i++) {
+                values.add(value);
+            }
+        }
+    
+        java.util.Collections.shuffle(values, new java.util.Random(42));
+    
+        String[] lines = new String[values.size()];
+        for (int i = 0; i < lines.length; i++) {
+            lines[i] = Integer.toString(values.get(i));
+        }
+    
+        String pack = PackLines("full.txt", lines);
+        runTheGame("4", pack);
+    
+        assertTrue(Player.getWinnerID() >= 1);
+        assertTrue(Player.getWinnerID() <= players);
+    
+        for (int id = 1; id <= players; id++) {
+            List<String> file = playerOutput(id);
+    
+            assertTrue(file.contains("player " + id + " exits"));
+    
+            String last = file.get(file.size() - 1);
+            String hand = last.substring(last.indexOf(':') + 1).trim();
+    
+            assertEquals(4, hand.split("\\s+").length);
+        }
+    }
 
 
     }
