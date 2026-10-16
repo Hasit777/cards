@@ -125,7 +125,7 @@ public class CardGame {
         
         startSignal.countDown();
 
-                // Give the game 30 seconds to finish
+                // game 30 seconds to finish
         long starting_time = System.currentTimeMillis();
         long maximum_limit = 30_000;
         
@@ -134,19 +134,19 @@ public class CardGame {
             Thread.sleep(100);
         }
         
-        // If the game has taken too long, stop it
+        // game has taken too long, stop it
         if (!Gamestate.isFinished()) {
             System.out.println(" limit reached. stop game");
             Gamestate.endGame();
         }
         
-        // Wait for all player threads to finish
+        // all player threads to finish
         for (Thread thread : threads) {
             thread.join();
         }
         System.out.println("all players have finishe");
 
-        // Write the final contents of every deck to its output file
+        // the final contents of every deck to its output file
         for (CardDeck deck : decks) {
             deck.writeOutputFile();
         }
