@@ -68,7 +68,7 @@ public class CardDeckTest {
         assertEquals("deck3 contents:", deck.contentsLine());
         deck.add(new Card(3));
         deck.add(new Card(2));
-        assertEquals("deck3 contents: 3,2", deck.contentsLine());
+        assertEquals("deck3 contents: 3 2", deck.contentsLine());
     }
         @Test
     public void writeOutputFileCreatesFileWithFinalContents() throws Exception {
