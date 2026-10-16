@@ -82,7 +82,7 @@ public final class CardDeck {
         try {
             String results = "deck" + id + " contents:";
             for (Card card : cards) {
-                result += " " + card.getValue();
+                results += " " + card.getValue();
             }
             return results;
         } finally {
