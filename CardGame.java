@@ -136,7 +136,7 @@ public class CardGame {
         
         // If the game has taken too long, stop it
         if (!Gamestate.isFinished()) {
-            System.out.println("Time limit reached. Stopping game.");
+            System.out.println(" limit reached. stop game");
             Gamestate.endGame();
         }
         
@@ -144,8 +144,14 @@ public class CardGame {
         for (Thread thread : threads) {
             thread.join();
         }
-        System.out.println("All players have finished.");
+        System.out.println("all players have finishe");
 
+        // Write the final contents of every deck to its output file
+        for (CardDeck deck : decks) {
+            deck.writeOutputFile();
+        }
+        
         input.close();
+    
+       
     }
-}
