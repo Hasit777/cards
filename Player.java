@@ -31,9 +31,6 @@ public class Player implements Runnable {
     static void resetWinner() {
         winnerID.set(0);
     }
-    public static int getWinnerID() {
-    return winnerID;
-    }    
  
     @Override
     public void run() {
