@@ -56,4 +56,34 @@ public class PackReaderTest
         reader.ReadPack();
         assertEquals(3, reader.getPackItems().size());
     }
+    
+    @Test
+    public void invalidNumbers() throws Exception {
+        String[] invalid = {"EdgerunnerSeason2", "-5", "3.5", "+2", "2147483648", "1 2"};
+        for (String value : invalid) {
+            PackReader reader = makePack("1", value, "2");
+            assertTrue("Accepted invalid value: " + value,
+                    reader.getPackItems().isEmpty());
+        }
+    }
+    
+    @Test
+    public void blankLineInPack() throws Exception {
+        PackReader reader = makePack("1", "", "2");
+        assertTrue(reader.getPackItems().isEmpty());
+    }
+    
+    @Test
+    public void invalidFileClearsPreviousCards() throws Exception {
+        File file = folder.newFile();
+        Files.write(file.toPath(), Arrays.asList("1", "2", "3"));
+        PackReader reader = new PackReader(file.getPath());
+        reader.ReadPack();
+        assertEquals(3, reader.getPackItems().size());
+        Files.write(file.toPath(), Arrays.asList("1", "abc", "3"));
+        reader.ReadPack();
+        assertTrue(reader.getPackItems().isEmpty());
+    }
+    
+    
 }
