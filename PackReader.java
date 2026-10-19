@@ -1,3 +1,5 @@
+//takes a pack seperates it into lines make sure the lines are valid non negative intergers
+//makes sure the pack is not empty or an error doesnt occur whe  opening
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class PackReader
                 String line = scanner.nextLine();
                 try {
                     int value = Integer.parseInt(line);
-                    if (value < 0 || !line.matches("[0-9]+")) {
+                    if (value < 0 || !line.matches("[0-9]+")) {//checks whether it is less than 0 or if it isnt a non negative interger
                         System.out.println("Invalid number in pack");
                         packItems.clear();
                         break;
