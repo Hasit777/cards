@@ -86,7 +86,6 @@ public class Player implements Runnable {
                 out.println("player " + playerID + " discards a " + discarded.getValue() + " to deck " + discardDeck.getId());
                 out.println("player " + playerID + " current hand is " + handToString());
                 return true;
- 
             } finally {
                 second.unlock();
             }
