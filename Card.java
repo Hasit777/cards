@@ -1,3 +1,6 @@
+//basically allows you to create an object called card that allows one variable in its constructor for its
+//vairable and allows you to call its value, compare if it is equal, convert it to a stribg
+// and return its hash code with functions
 public final class Card{
     private final int value;
     public Card(int value) {
