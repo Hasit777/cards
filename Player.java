@@ -1,3 +1,5 @@
+//player is where we get the draw and discard logic from
+// it checks to see if the game has ended, if not then it continues by going round and drawing and discarding cards by locking decks and and checking if they have a winnning hand
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,7 +36,7 @@ public class Player implements Runnable {
  
     @Override
     public void run() {
-        try (PrintWriter out = new PrintWriter(new FileWriter("player" + playerID + "_output.txt"))) {
+        try (PrintWriter out = new PrintWriter(new FileWriter("player" + playerID + "_output.txt"))) {//used a print writer as it results in less error handliing
             out.println("player " + playerID + " initial hand " + handToString());
             if (hasWinningHand()) {
                 declareWin();
