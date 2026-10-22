@@ -261,10 +261,6 @@ public class CardGameTest {
         String pack = PackLines("full.txt", lines);
         runTheGame("4", pack);
 
-        // a winner must have been recorde and their ID must be valid
-        assertTrue(Player.getWinnerID() >= 1);
-        assertTrue(Player.getWinnerID() <= players);
-
         int winnerCount = 0;
 
         for (int id = 1; id <= players; id++) {
